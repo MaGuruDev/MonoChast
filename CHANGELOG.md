@@ -1,5 +1,25 @@
 # Changelog — MaGuru_MonoChast
 
+## 1.1.0 — 2026-07-02
+
+### Added
+- `Checkout Button Label` config field — text on the checkout submit button was hardcoded as "Pay in installments" with no admin control, unlike MonoPayment's equivalent setting; now configurable per store view
+- **View Guarantee Letter Data (JSON)** button in admin order view — `ChastOrderService::getGuaranteeLetterData()` (structured customer PII, passport, bank agreement) existed only as an unreachable service method; added `Controller/Adminhtml/Order/GuaranteeLetterData` and a button next to the existing PDF download
+- `ChastOrderState` / `ChastOrderSubState` source models — human-readable labels (and recommended-action hints for FAIL sub-states) for raw Monobank status codes like `EXCEEDED_SUM_LIMIT`, sourced from Monobank's official status reference table; wired into the order view block, the admin grid (now select/filterable columns), and order comment history
+
+### Fixed
+- **"Monobank Частинами" section never rendered in admin order view** — `ChastInfo::getOrder()` read block `data('order')`, which nothing ever set, instead of the `Registry` `current_order` key used by `MonoPayment`'s equivalent block
+- **Download Guarantee Letter 404** — `getGuaranteeLetterUrl()` built the action URL as `guarantee_letter`; Magento's action router converts underscores in the full route path to namespace separators, so it looked for a nested `Guarantee\Letter` controller instead of the real `GuaranteeLetter` class
+
+## 1.0.10 — 2026-07-02
+
+> Note: `composer.json` `version` had drifted out of sync with this file since 1.0.1 (stuck at `1.0.0` while releases up to 1.0.9 already shipped). This release corrects `composer.json` to match reality in addition to the changes below.
+
+### Changed
+- `Chast` config group (Environment, Store ID/Secret for production/sandbox/stage, Chast Callback URL note) moved here from `MonoCore` — same admin section/path, same config values; only appears once `MonoChast` is installed
+- Added missing DocBlocks to `_construct()` overrides, `configure()`/helper methods in Console Commands, `Cron::execute()`, `OrderStatusHandler` private methods, `Callback::verifySignature()`, `ChastInfo::getOrder()` per project DocBlock conventions
+- Documented required message queue consumer setup (`app/etc/env.php` → `cron_consumers_runner`) in README — without it, order confirmation on shipment silently never reaches Monobank
+
 ## 1.0.9 — 2026-05-19
 
 ### Added
