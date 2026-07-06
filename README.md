@@ -7,6 +7,8 @@ Adds Monobank "Частинами" (Buy Now Pay Later) as a standalone payment m
 
 > ⚠️ Amounts in Chast API are in **UAH (decimal)**, NOT kopecks. This module handles the distinction automatically.
 
+> ℹ️ **No fiscal integration needed or provided.** `MaGuru_MonoFiscal` fiscalizes `MaGuru_MonoPayment` orders only — it does not listen to any event this module dispatches, and that's intentional: Monobank fiscalizes Частинами purchases on their own side as part of the product. Do not add a fiscal module (MonoFiscal or CheckboxFiscal) for these orders — that would double-fiscalize the sale.
+
 ---
 
 ## Requirements
